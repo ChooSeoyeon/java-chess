@@ -41,6 +41,14 @@ public class Position {
         return POSITION_CACHE.get(key);
     }
 
+    public int getFileGap(Position other) {
+        return file - other.file;
+    }
+
+    public int getRankGap(Position other) {
+        return rank - other.rank;
+    }
+
     public static List<Position> values() {
         return List.copyOf(POSITION_CACHE.values());
     }
