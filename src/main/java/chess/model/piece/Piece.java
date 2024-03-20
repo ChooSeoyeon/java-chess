@@ -1,8 +1,10 @@
 package chess.model.piece;
 
-public class Piece {
-    private final Color color;
-    private final Type type;
+import chess.model.board.Position;
+
+public abstract class Piece {
+    protected final Color color;
+    protected final Type type;
 
     public Piece(Color color, Type type) {
         this.color = color;
@@ -16,4 +18,6 @@ public class Piece {
         }
         return signature.getWhite();
     }
+
+    public abstract boolean canMove(Position source, Position destination);
 }
