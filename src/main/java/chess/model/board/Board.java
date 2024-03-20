@@ -17,7 +17,16 @@ public class Board {
 
     public Board(Map<Position, Piece> squares) {
         this.squares = new HashMap<>(squares);
-        ALL_POSITIONS.forEach(position -> this.squares.putIfAbsent(position, new EmptyPiece()));
+        ALL_POSITIONS.forEach(position -> this.squares.putIfAbsent(position, new EmptyPiece())); // TODO: EMPTY 캐싱하기
+    }
+
+    public void movePiece(Position source, Position destination) {
+        Piece piece = squares.get(source);
+        if (!piece.canMove(source, destination)) {
+            throw new IllegalArgumentException("이동할 수 없는 위치입니다.");
+        }
+        squares.put(destination, piece);
+        squares.put(source, new EmptyPiece());
     }
 
     public List<String> getSignatures() {
