@@ -3,11 +3,13 @@ package chess.model.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import chess.model.piece.Color;
 import chess.model.piece.PieceFixture;
 import chess.model.position.Movement;
 import chess.model.position.Position;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class BoardTest {
@@ -77,5 +79,17 @@ class BoardTest {
         assertThatThrownBy(() -> board.move(movement))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("경로");
+    }
+
+    @Test
+    void 각_진영의_점수를_기물의_점수_합으로_계산한다() {
+        // given
+        Board board = new InitialBoardGenerator().create();
+
+        // when
+        Map<Color, Double> scores = board.calculateScores();
+
+        // then
+        assertThat(scores.get(Color.WHITE)).isEqualTo(38);
     }
 }
