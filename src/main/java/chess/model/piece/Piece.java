@@ -19,13 +19,15 @@ public abstract class Piece {
 
     public abstract List<Position> getIntermediatePositions(Movement movement);
 
+    public abstract double getScore();
+
     protected void validateDestinationColor(Piece destination) {
         if (destination.hasSameColorAs(this.color)) {
             throw new IllegalArgumentException("도착지에 같은 색깔의 기물이 있으면 움직일 수 없습니다.");
         }
     }
 
-    private boolean hasSameColorAs(Color color) {
+    public boolean hasSameColorAs(Color color) {
         return this.color == color;
     }
 

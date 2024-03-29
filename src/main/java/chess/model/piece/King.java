@@ -3,6 +3,7 @@ package chess.model.piece;
 import chess.model.position.Movement;
 
 public final class King extends JumpingPiece {
+    private static final double SCORE = 0;
     private static final int MAX_MOVE_DISTANCE = 1;
     private static final Piece BLACK_KING = new King(Color.BLACK);
     private static final Piece WHITE_KING = new King(Color.WHITE);
@@ -24,5 +25,10 @@ public final class King extends JumpingPiece {
         int fileDistance = movement.getFileDistance();
         int rankDistance = movement.getRankDistance();
         return fileDistance <= MAX_MOVE_DISTANCE && rankDistance <= MAX_MOVE_DISTANCE;
+    }
+
+    @Override
+    public double getScore() {
+        return SCORE;
     }
 }

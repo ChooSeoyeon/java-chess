@@ -67,6 +67,20 @@ public class Board {
         squares.put(source, Empty.getInstance());
     }
 
+    public Map<Color, Double> calculateScores() {
+        Map<Color, Double> answer = new HashMap<>();
+        answer.put(Color.WHITE, calculateScore(Color.WHITE));
+        answer.put(Color.BLACK, calculateScore(Color.BLACK));
+        return answer;
+    }
+
+    private Double calculateScore(Color color) {
+        return squares.values().stream()
+                .filter(piece -> piece.hasSameColorAs(color))
+                .mapToDouble(Piece::getScore)
+                .sum();
+    }
+
     public List<List<Piece>> getLines() {
         List<List<Piece>> lines = new ArrayList<>();
         for (int rank = MAX_LENGTH; rank >= MIN_LENGTH; rank--) {

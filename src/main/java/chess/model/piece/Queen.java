@@ -3,6 +3,7 @@ package chess.model.piece;
 import chess.model.position.Movement;
 
 public final class Queen extends SlidingPiece {
+    private static final double SCORE = 9;
     private static final Piece BLACK_QUEEN = new Queen(Color.BLACK);
     private static final Piece WHITE_QUEEN = new Queen(Color.WHITE);
 
@@ -21,5 +22,10 @@ public final class Queen extends SlidingPiece {
     public boolean isValid(Movement movement, Piece destination) {
         validateDestinationColor(destination);
         return movement.isDiagonal() || movement.isSameFileOrRank();
+    }
+
+    @Override
+    public double getScore() {
+        return SCORE;
     }
 }
