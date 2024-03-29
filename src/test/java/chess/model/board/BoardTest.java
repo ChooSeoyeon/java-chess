@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.model.piece.Color;
+import chess.model.piece.Pawn;
+import chess.model.piece.Piece;
 import chess.model.piece.PieceFixture;
 import chess.model.position.Movement;
 import chess.model.position.Position;
@@ -87,9 +89,40 @@ class BoardTest {
         Board board = new InitialBoardGenerator().create();
 
         // when
-        Map<Color, Double> scores = board.calculateScores();
+        Map<Color, Double> score = board.calculateScore();
 
         // then
-        assertThat(scores.get(Color.WHITE)).isEqualTo(38);
+        assertThat(score.get(Color.WHITE)).isEqualTo(38);
+        assertThat(score.get(Color.BLACK)).isEqualTo(38);
+    }
+
+    @Test
+    void file과_색이_같은_폰이_있는_경우_해당_폰들을_1점이_아닌_0_5점으로_계산한다() {
+        // given
+        Map<Position, Piece> squares = new HashMap<>();
+        squares.put(Position.of(1, 2), Pawn.from(Color.WHITE));
+        squares.put(Position.of(1, 3), Pawn.from(Color.WHITE));
+        Board board = new Board(squares);
+
+        // when
+        Map<Color, Double> score = board.calculateScore();
+
+        // then
+        assertThat(score.get(Color.WHITE)).isEqualTo(1);
+    }
+
+    @Test
+    void file과_색이_같은_폰이_없는_경우_해당_폰들을_1점으로_계산한다() {
+        // given
+        Map<Position, Piece> squares = new HashMap<>();
+        squares.put(Position.of(1, 2), Pawn.from(Color.WHITE));
+        squares.put(Position.of(2, 2), Pawn.from(Color.WHITE));
+        Board board = new Board(squares);
+
+        // when
+        Map<Color, Double> score = board.calculateScore();
+
+        // then
+        assertThat(score.get(Color.WHITE)).isEqualTo(2);
     }
 }
