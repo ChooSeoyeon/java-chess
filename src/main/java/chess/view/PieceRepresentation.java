@@ -26,10 +26,6 @@ public enum PieceRepresentation {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
     public static List<String> mappingBoard(BoardDTO boardDTO) {
         return boardDTO.board().stream()
                 .map(PieceRepresentation::mappingLine)
@@ -45,5 +41,9 @@ public enum PieceRepresentation {
 
     private static PieceRepresentation mappingPiece(String pieceName) {
         return PieceRepresentation.valueOf(pieceName);
+    }
+
+    private String getValue() {
+        return value;
     }
 }

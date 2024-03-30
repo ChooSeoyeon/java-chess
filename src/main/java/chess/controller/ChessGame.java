@@ -4,10 +4,12 @@ import chess.dto.BoardDTO;
 import chess.dto.PositionDTO;
 import chess.model.board.Board;
 import chess.model.board.InitialBoardGenerator;
+import chess.model.piece.Color;
 import chess.model.position.Movement;
 import chess.view.Command;
 import chess.view.InputView;
 import chess.view.OutputView;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ChessGame {
@@ -40,13 +42,19 @@ public class ChessGame {
     }
 
     private void playTurn(GameStatus gameStatus, Board board) {
-        Command command = inputView.askMoveOrEndCommand();
+        Command command = inputView.askMoveOrStatusOrEndCommand();
         if (command == Command.END) {
             gameStatus.stop();
             return;
         }
-        move(board);
-        showBoard(board);
+        if (command == Command.MOVE) {
+            move(board);
+            showBoard(board);
+            return;
+        }
+        if (command == Command.STATUS) {
+            showBoardStatus(board);
+        }
     }
 
     private void move(Board board) {
@@ -54,6 +62,11 @@ public class ChessGame {
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
         board.move(movement);
+    }
+
+    private void showBoardStatus(Board board) {
+        Map<Color, Double> boardStatus = board.calculateScore();
+        outputView.printBoardStatus(boardStatus);
     }
 
     private void retryOnException(Runnable action) {
