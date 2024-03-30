@@ -24,16 +24,16 @@ public class InputView {
         }
     }
 
-    public Command askMoveOrEndCommand() {
+    public Command askMoveOrStatusOrEndCommand() {
         String input = SCANNER.next();
         Command command = Command.findBy(input);
-        validateMoveOrEndCommand(command);
+        validateMoveOrStatusOrEndCommand(command);
         return command;
     }
 
-    private void validateMoveOrEndCommand(Command command) {
-        if (command != Command.MOVE && command != Command.END) {
-            throw new IllegalArgumentException("게임을 이미 시작한 상태에선 move 또는 end를 입력해야 합니다.");
+    private void validateMoveOrStatusOrEndCommand(Command command) {
+        if (command != Command.MOVE && command != Command.STATUS && command != Command.END) {
+            throw new IllegalArgumentException("게임을 시작한 상태에선 move 혹은 status 혹은 end를 입력해야 합니다.");
         }
     }
 
