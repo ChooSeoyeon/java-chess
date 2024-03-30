@@ -135,14 +135,14 @@ public class Board {
     public List<List<Piece>> getLines() {
         List<List<Piece>> lines = new ArrayList<>();
         for (int rank = MAX_LENGTH; rank >= MIN_LENGTH; rank--) {
-            lines.add(getLine(rank));
+            lines.add(getLineByRank(rank));
         }
         return lines;
     }
 
-    private List<Piece> getLine(int lineIndex) {
+    private List<Piece> getLineByRank(int rank) {
         return IntStream.rangeClosed(MIN_LENGTH, MAX_LENGTH)
-                .mapToObj(file -> squares.get(Position.of(file, lineIndex)))
+                .mapToObj(file -> squares.get(Position.of(file, rank)))
                 .toList();
     }
 
