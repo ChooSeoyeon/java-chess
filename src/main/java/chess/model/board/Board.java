@@ -2,6 +2,7 @@ package chess.model.board;
 
 import chess.model.piece.Color;
 import chess.model.piece.Empty;
+import chess.model.piece.King;
 import chess.model.piece.Pawn;
 import chess.model.piece.Piece;
 import chess.model.position.Movement;
@@ -69,6 +70,19 @@ public class Board {
         Position source = movement.getSource();
         squares.put(destination, getSourcePiece(movement));
         squares.put(source, Empty.getInstance());
+    }
+
+    public Color determineWinner() {
+        if (isOppositeKingCaptured()) {
+            return currnetColor;
+        }
+        return Color.NONE;
+    }
+
+    private boolean isOppositeKingCaptured() {
+        Piece king = King.from(currnetColor.getOpposite());
+        return squares.values().stream()
+                .noneMatch(piece -> piece.equals(king));
     }
 
     public Map<Color, Double> calculateScore() {
