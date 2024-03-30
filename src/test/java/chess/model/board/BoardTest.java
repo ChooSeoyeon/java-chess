@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.model.piece.Color;
+import chess.model.piece.King;
 import chess.model.piece.Pawn;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceFixture;
@@ -124,5 +125,28 @@ class BoardTest {
 
         // then
         assertThat(score.get(Color.WHITE)).isEqualTo(2);
+    }
+
+    @Test
+    void 킹을_잡은_쪽이_승자가_된다() {
+        // given
+        Map<Position, Piece> squares = new HashMap<>();
+        squares.put(Position.of(5, 1), King.from(Color.WHITE));
+        Board board = new Board(squares);
+
+        // when & then
+        assertThat(board.determineWinner()).isEqualTo(Color.WHITE);
+    }
+
+    @Test
+    void 둘다_킹이_잡히지_않았다면_아직_승자는_없다() {
+        // given
+        Map<Position, Piece> squares = new HashMap<>();
+        squares.put(Position.of(5, 1), King.from(Color.WHITE));
+        squares.put(Position.of(5, 8), King.from(Color.BLACK));
+        Board board = new Board(squares);
+
+        // when & then
+        assertThat(board.determineWinner()).isEqualTo(Color.NONE);
     }
 }
