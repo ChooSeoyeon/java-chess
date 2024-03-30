@@ -50,6 +50,7 @@ public class ChessGame {
         if (command == Command.MOVE) {
             move(board);
             showBoard(board);
+            determineWinner(gameStatus, board);
             return;
         }
         if (command == Command.STATUS) {
@@ -62,6 +63,14 @@ public class ChessGame {
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
         board.move(movement);
+    }
+
+    private void determineWinner(GameStatus gameStatus, Board board) {
+        Color winner = board.determineWinner();
+        if (winner != Color.NONE) {
+            gameStatus.stop();
+            outputView.printWinner(winner);
+        }
     }
 
     private void showBoardStatus(Board board) {

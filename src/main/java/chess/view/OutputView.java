@@ -20,13 +20,17 @@ public class OutputView {
         System.out.println(board);
     }
 
-    public void printException(String message) {
-        System.out.println("[ERROR] " + message);
-    }
-
     public void printBoardStatus(Map<Color, Double> boardStatus) {
         boardStatus.forEach((color, score) -> {
             System.out.println(ColorRepresentation.mappingColor(color) + " : " + score);
         });
+    }
+
+    public void printWinner(Color winner) {
+        System.out.println(ColorRepresentation.mappingColor(winner) + "이 승리하였습니다.");
+    }
+
+    public void printException(String message) {
+        System.out.println("[ERROR] " + message);
     }
 }

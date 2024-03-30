@@ -73,14 +73,14 @@ public class Board {
     }
 
     public Color determineWinner() {
-        if (isOppositeKingCaptured()) {
-            return currnetColor;
+        if (isKingCaptured()) {
+            return currnetColor.getOpposite();
         }
         return Color.NONE;
     }
 
-    private boolean isOppositeKingCaptured() {
-        Piece king = King.from(currnetColor.getOpposite());
+    private boolean isKingCaptured() {
+        Piece king = King.from(currnetColor);
         return squares.values().stream()
                 .noneMatch(piece -> piece.equals(king));
     }
