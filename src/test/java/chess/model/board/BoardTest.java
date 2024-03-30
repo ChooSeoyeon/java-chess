@@ -132,9 +132,14 @@ class BoardTest {
         // given
         Map<Position, Piece> squares = new HashMap<>();
         squares.put(Position.of(5, 1), King.from(Color.WHITE));
+        squares.put(Position.of(5, 2), King.from(Color.BLACK));
         Board board = new Board(squares);
 
-        // when & then
+        // when
+        Movement movement = new Movement(Position.of(5, 1), Position.of(5, 2));
+        board.move(movement);
+
+        // then
         assertThat(board.determineWinner()).isEqualTo(Color.WHITE);
     }
 
