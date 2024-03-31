@@ -51,9 +51,12 @@ public class ChessGame {
             showBoardStatus(board);
             return;
         }
-        move(board);
-        showBoard(board);
-        determineWinner(gameStatus, board);
+        if (command == Command.MOVE) {
+            move(board);
+            showBoard(board);
+            determineWinner(gameStatus, board);
+        }
+        throw new IllegalArgumentException("아직 제공하지 않는 기능입니다.");
     }
 
     private void move(Board board) {
