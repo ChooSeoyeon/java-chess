@@ -47,15 +47,13 @@ public class ChessGame {
             gameStatus.stop();
             return;
         }
-        if (command == Command.MOVE) {
-            move(board);
-            showBoard(board);
-            determineWinner(gameStatus, board);
-            return;
-        }
         if (command == Command.STATUS) {
             showBoardStatus(board);
+            return;
         }
+        move(board);
+        showBoard(board);
+        determineWinner(gameStatus, board);
     }
 
     private void move(Board board) {
