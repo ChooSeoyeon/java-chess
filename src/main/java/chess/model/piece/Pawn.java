@@ -4,6 +4,9 @@ import chess.model.position.Movement;
 
 public final class Pawn extends JumpingPiece {
     private static final double SCORE = 1;
+    private static final double REDUCED_SCORE = 0.5;
+    private static final double NON_REDUCED_SCORE = 0.0;
+    private static final double SCORE_REDUCE_THRESHOLD_COUNT = 2.0;
     private static final int START_JUMP_DISTANCE = 2;
     private static final int COMMON_RANK_DISTANCE = 1;
     private static final Piece WHITE_PAWN = new Pawn(Color.WHITE, 1, 2);
@@ -23,6 +26,13 @@ public final class Pawn extends JumpingPiece {
             return BLACK_PAWN;
         }
         return WHITE_PAWN;
+    }
+
+    public static double calculateReducedScoreByCount(long count) {
+        if (count >= SCORE_REDUCE_THRESHOLD_COUNT) {
+            return REDUCED_SCORE * count;
+        }
+        return NON_REDUCED_SCORE;
     }
 
     @Override

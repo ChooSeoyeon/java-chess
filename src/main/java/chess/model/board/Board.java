@@ -18,9 +18,6 @@ public class Board {
     public static final int MIN_LENGTH = 1;
     private static final Color START_COLOR = Color.WHITE;
     private static final List<Position> ALL_POSITIONS = Position.values();
-    private static final double REDUCED_PAWN_SCORE = 0.5;
-    private static final double NON_REDUCED_PAWN_SCORE = 0.0;
-    private static final double PAWN_SCORE_REDUCE_THRESHOLD = 2.0;
 
     private final Map<Position, Piece> squares;
     private Color currnetColor = START_COLOR;
@@ -113,10 +110,7 @@ public class Board {
 
     private double calculateReducedPawnScoreByFile(int file, Color color) {
         long pawnCount = calculatePawnCountInSameFile(file, color);
-        if (pawnCount >= PAWN_SCORE_REDUCE_THRESHOLD) {
-            return REDUCED_PAWN_SCORE * pawnCount;
-        }
-        return NON_REDUCED_PAWN_SCORE;
+        return Pawn.calculateReducedScoreByCount(pawnCount);
     }
 
     private long calculatePawnCountInSameFile(int file, Color color) {
