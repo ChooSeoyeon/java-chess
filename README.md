@@ -6,6 +6,21 @@
 
 - [온라인 코드 리뷰 과정](https://github.com/woowacourse/woowacourse-docs/blob/master/maincourse/README.md)
 
+---
+
+# 체스 게임 실행 방법
+
+1. docker-compose.yml 파일이 있는 경로에서 docker 명령어로 server를 실행합니다.
+
+```
+cd docker
+docker-compose -p chess up -d # Docker 실행하기
+```
+
+2. 애플리케이션을 실행합니다.
+
+---
+
 # 체스 게임 설명
 
 - [대한체스연맹](http://www.kchess.or.kr/%EB%8C%80%EA%B5%AD%EB%B0%A9%EB%B2%95/)의 대국방법을 차용했습니다.
@@ -57,6 +72,8 @@
 - 슬라이딩 기물(Sliding Piece) -> 경로에 다른 기물이 있으면 움직이지 못하는 기물 [Sliding Piece](https://www.chessprogramming.org/Sliding_Pieces)
 - 점핑 기물(Jumping Piece) -> 경로에 다른 기물이 있어도 움직일 수 있는 기물
 
+---
+
 # 구현 기능 목록
 
 ## 비즈니스 기능
@@ -103,6 +120,8 @@
     - 다른 기물의 위치를 `조회`해 움직일 수 있는지 확인한다
     - 현재 턴을 `조회`해 턴에 맞는 색깔의 기물인지 확인힌다
 3. [게임 종료] 킹이 잡히면 보드의 우승자를 `업데이트`하고 게임을 종료한다
+
+---
 
 # 부록
 
