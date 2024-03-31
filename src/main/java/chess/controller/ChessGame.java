@@ -55,6 +55,7 @@ public class ChessGame {
             move(board);
             showBoard(board);
             determineWinner(gameStatus, board);
+            return;
         }
         throw new IllegalArgumentException("아직 제공하지 않는 기능입니다.");
     }
