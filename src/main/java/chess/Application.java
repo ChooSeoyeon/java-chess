@@ -11,11 +11,14 @@ import chess.view.OutputView;
 import java.sql.Connection;
 
 public class Application {
+    private static final String PROPERTIES_PATH = "src/main/java/chess/resource/production.yml";
+
     public static void main(String[] args) {
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();
 
-        Connection connection = DatabaseConnectionManager.getConnection();
+        DatabaseConnectionManager databaseConnectionManager = DatabaseConnectionManager.from(PROPERTIES_PATH);
+        Connection connection = databaseConnectionManager.getConnection();
         TransactionManager transactionManager = new TransactionManager(connection);
         BoardDao boardDao = new BoardDao(connection);
         PieceDao pieceDao = new PieceDao(connection);

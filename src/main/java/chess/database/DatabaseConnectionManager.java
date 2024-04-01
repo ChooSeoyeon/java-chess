@@ -1,24 +1,43 @@
 package chess.database;
 
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnectionManager {
-    private static final String SERVER = "localhost:13306";
-    private static final String DATABASE = "chess";
-    private static final String OPTION = "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
-    private static final String JDBC_URL = "jdbc:mysql://" + SERVER + "/" + DATABASE + OPTION;
+    private final Properties properties;
 
-    private DatabaseConnectionManager() {
+    private DatabaseConnectionManager(Properties properties) {
+        this.properties = properties;
     }
 
-    public static Connection getConnection() {
+    public static DatabaseConnectionManager from(String propertiesPath) {
+        return new DatabaseConnectionManager(loadProperties(propertiesPath));
+    }
+
+    private static Properties loadProperties(String configurationFileName) {
         try {
-            return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
-        } catch (final SQLException e) {
+            FileInputStream fileInputStream = new FileInputStream(configurationFileName);
+            Properties properties = new Properties();
+            properties.load(fileInputStream);
+            return properties;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("properties 파일을 읽는데 실패했습니다.");
+        }
+    }
+
+    public Connection getConnection() {
+        try {
+            String server = properties.get("server").toString();
+            String database = properties.get("database").toString();
+            String option = properties.get("option").toString();
+            String username = properties.get("username").toString();
+            String password = properties.get("password").toString();
+            String jdbcUrl = "jdbc:mysql://" + server + "/" + database + option;
+            return DriverManager.getConnection(jdbcUrl, username, password);
+        } catch (SQLException e) {
             throw new IllegalStateException("DB 연결을 실패했습니다.");
         }
     }
