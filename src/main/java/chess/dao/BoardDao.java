@@ -64,4 +64,15 @@ public final class BoardDao {
             throw new IllegalStateException("Board 업데이트 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
+
+    public void updateWinnerColor(Long id, String winnerColor) {
+        String sql = "UPDATE board SET winner_color = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, winnerColor);
+            statement.setLong(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Board 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
 }

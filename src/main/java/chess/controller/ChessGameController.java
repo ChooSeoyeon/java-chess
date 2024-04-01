@@ -79,6 +79,7 @@ public class ChessGameController {
         if (winner != Color.NONE) {
             gameStatus.stop();
             outputView.printWinner(winner);
+            boardService.updateWinner(winner);
         }
     }
 

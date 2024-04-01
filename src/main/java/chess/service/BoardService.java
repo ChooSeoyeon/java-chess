@@ -83,4 +83,14 @@ public class BoardService {
         pieceDao.updateTypeAndColor(sourcePieceVO.id(), Type.NONE.name(), Color.NONE.name());
         boardDao.updateCurrentColor(boardId, board.getCurrentColor().name());
     }
+
+    public void updateWinner(Color winnerColor) {
+        transactionManager.performTransaction(() -> updateWinnerWithTransaction(winnerColor));
+    }
+
+    private void updateWinnerWithTransaction(Color winnerColor) {
+        BoardVO boardVO = boardDao.findLast()
+                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+        boardDao.updateWinnerColor(boardVO.id(), winnerColor.name());
+    }
 }
