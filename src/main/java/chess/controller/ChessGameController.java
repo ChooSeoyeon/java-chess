@@ -3,22 +3,24 @@ package chess.controller;
 import chess.dto.BoardDTO;
 import chess.dto.PositionDTO;
 import chess.model.board.Board;
-import chess.model.board.InitialBoardGenerator;
 import chess.model.piece.Color;
 import chess.model.position.Movement;
+import chess.service.BoardService;
 import chess.view.Command;
 import chess.view.InputView;
 import chess.view.OutputView;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ChessGame {
+public class ChessGameController {
     private final OutputView outputView;
     private final InputView inputView;
+    private final BoardService boardService;
 
-    public ChessGame(OutputView outputView, InputView inputView) {
+    public ChessGameController(OutputView outputView, InputView inputView, BoardService boardService) {
         this.outputView = outputView;
         this.inputView = inputView;
+        this.boardService = boardService;
     }
 
     public void run() {
@@ -28,7 +30,7 @@ public class ChessGame {
     }
 
     private void start() {
-        Board board = new InitialBoardGenerator().create();
+        Board board = boardService.getRunningBoard();
         GameStatus gameStatus = new GameStatus();
         showBoard(board);
         while (gameStatus.isRunning()) {
