@@ -50,4 +50,12 @@ public abstract class Piece {
     public String getName() {
         return color.name() + PIECE_NAME_DELIMITER + type.name();
     }
+
+    public Type getType() {
+        return type;
+    }
+
+    public Color getColor() {
+        return color;
+    }
 }

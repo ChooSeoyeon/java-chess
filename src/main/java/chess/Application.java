@@ -2,6 +2,7 @@ package chess;
 
 import chess.controller.ChessGameController;
 import chess.dao.BoardDao;
+import chess.dao.PieceDao;
 import chess.database.DatabaseConnectionManager;
 import chess.database.TransactionManager;
 import chess.service.BoardService;
@@ -17,7 +18,8 @@ public class Application {
         Connection connection = DatabaseConnectionManager.getConnection();
         TransactionManager transactionManager = new TransactionManager(connection);
         BoardDao boardDao = new BoardDao(connection);
-        BoardService boardService = new BoardService(boardDao, transactionManager);
+        PieceDao pieceDao = new PieceDao(connection);
+        BoardService boardService = new BoardService(boardDao, pieceDao, transactionManager);
 
         ChessGameController chessGameController = new ChessGameController(outputView, inputView, boardService);
         chessGameController.run();

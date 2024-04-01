@@ -17,7 +17,7 @@ public class TransactionManager {
             commit();
         } catch (Exception e) {
             rollback();
-            throw new IllegalStateException("트랜잭션 처리 중 오류가 발생했습니다.");
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
@@ -29,10 +29,9 @@ public class TransactionManager {
             return result;
         } catch (Exception e) {
             rollback();
-            throw new IllegalStateException("트랜잭션 처리 중 오류가 발생했습니다.");
+            throw new IllegalStateException(e.getMessage());
         }
     }
-
 
     public void begin() {
         try {
