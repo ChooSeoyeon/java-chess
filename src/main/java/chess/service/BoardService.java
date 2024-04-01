@@ -7,9 +7,12 @@ import chess.dao.PieceVO;
 import chess.database.TransactionManager;
 import chess.model.board.Board;
 import chess.model.board.InitialBoardGenerator;
+import chess.model.piece.Color;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BoardService {
     private final BoardDao boardDao;
@@ -27,8 +30,21 @@ public class BoardService {
     }
 
     private Board getRunningBoardWithTransaction() {
-        // TODO: 아직 안끝난 게임이 있는지 확인하고 있다면 그 게임을 반환하기
-        return createNewBoard();
+        return boardDao.findLast()
+                .filter(this::isRunningBoard)
+                .map(this::getExistedBoard)
+                .orElseGet(this::createNewBoard);
+    }
+
+    private boolean isRunningBoard(BoardVO boardVO) {
+        return boardVO.winner().equals(Color.NONE.name());
+    }
+
+    private Board getExistedBoard(BoardVO boardVO) {
+        List<PieceVO> pieceVOs = pieceDao.findAllByBoardId(boardVO.id());
+        Map<Position, Piece> squares = pieceVOs.stream()
+                .collect(Collectors.toMap(PieceVO::toPosition, PieceVO::toPiece));
+        return boardVO.toBoard(squares);
     }
 
     private Board createNewBoard() {

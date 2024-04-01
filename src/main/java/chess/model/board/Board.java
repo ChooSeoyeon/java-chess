@@ -28,6 +28,12 @@ public class Board {
         ALL_POSITIONS.forEach(position -> this.squares.putIfAbsent(position, Empty.getInstance()));
     }
 
+    public Board(Map<Position, Piece> squares, Color currnetColor) {
+        this.currnetColor = currnetColor;
+        this.squares = new HashMap<>(squares);
+        ALL_POSITIONS.forEach(position -> this.squares.putIfAbsent(position, Empty.getInstance()));
+    }
+
     public void move(Movement movement) {
         validateTurn(movement);
         validateMove(movement);

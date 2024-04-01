@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 public final class BoardDao {
     private final Connection connection;
@@ -30,5 +31,26 @@ public final class BoardDao {
             return generatedKeys.getLong(1);
         }
         throw new SQLException("Generated key를 찾을 수 없습니다.");
+    }
+
+    public Optional<BoardVO> findLast() {
+        String sql = "SELECT * FROM board ORDER BY id DESC LIMIT 1";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery();) {
+            return fetchBoard(resultSet);
+        } catch (SQLException e) {
+            throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    private Optional<BoardVO> fetchBoard(ResultSet resultSet) throws SQLException {
+        if (resultSet.next()) {
+            return Optional.of(new BoardVO(
+                    resultSet.getLong("id"),
+                    resultSet.getString("current_turn"),
+                    resultSet.getString("winner")
+            ));
+        }
+        return Optional.empty();
     }
 }
