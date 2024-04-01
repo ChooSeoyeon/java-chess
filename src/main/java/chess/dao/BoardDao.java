@@ -53,4 +53,15 @@ public final class BoardDao {
         }
         return Optional.empty();
     }
+
+    public void updateCurrentColor(Long boardId, String currentColor) {
+        String sql = "UPDATE board SET current_color = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, currentColor);
+            statement.setLong(2, boardId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException("Board 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
 }

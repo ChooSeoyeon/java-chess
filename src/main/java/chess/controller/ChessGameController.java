@@ -71,6 +71,7 @@ public class ChessGameController {
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
         board.move(movement);
+        boardService.updatePieceAndTurn(board, movement);
     }
 
     private void determineWinner(GameStatus gameStatus, Board board) {

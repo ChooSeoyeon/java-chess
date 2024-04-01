@@ -9,6 +9,8 @@ import chess.model.board.Board;
 import chess.model.board.InitialBoardGenerator;
 import chess.model.piece.Color;
 import chess.model.piece.Piece;
+import chess.model.piece.Type;
+import chess.model.position.Movement;
 import chess.model.position.Position;
 import java.util.List;
 import java.util.Map;
@@ -58,5 +60,27 @@ public class BoardService {
             pieceDao.create(pieceVO);
         });
         return board;
+    }
+
+    public void updatePieceAndTurn(Board board, Movement movement) {
+        transactionManager.performTransaction(() -> updatePieceAndTurnWithTransaction(board, movement));
+    }
+
+    private void updatePieceAndTurnWithTransaction(Board board, Movement movement) {
+        BoardVO boardVO = boardDao.findLast()
+                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+        Long boardId = boardVO.id();
+
+        Position source = movement.getSource();
+        Position destination = movement.getDestination();
+        PieceVO sourcePieceVO = pieceDao.findByBoardIdAndFileAndRank(boardId, source.getFile(), source.getRank())
+                .orElseThrow(() -> new IllegalStateException("출발지 말을 찾을 수 없습니다."));
+        PieceVO destinationPieceVO = pieceDao.findByBoardIdAndFileAndRank(boardId, destination.getFile(),
+                        destination.getRank())
+                .orElseThrow(() -> new IllegalStateException("도착지 말을 찾을 수 없습니다."));
+
+        pieceDao.updateTypeAndColor(destinationPieceVO.id(), sourcePieceVO.type(), sourcePieceVO.color());
+        pieceDao.updateTypeAndColor(sourcePieceVO.id(), Type.NONE.name(), Color.NONE.name());
+        boardDao.updateCurrentColor(boardId, board.getCurrentColor().name());
     }
 }
