@@ -15,10 +15,10 @@ public final class BoardDao {
     }
 
     public Long create(BoardVO board) {
-        String sql = "INSERT INTO board (current_turn, winner) VALUES (?, ?)";
+        String sql = "INSERT INTO board (current_color, winner_color) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, board.currentTurn());
-            statement.setString(2, board.winner());
+            statement.setString(1, board.currentColor());
+            statement.setString(2, board.winnerColor());
             statement.executeUpdate();
             return fetchGeneratedKey(statement.getGeneratedKeys());
         } catch (SQLException e) {
@@ -47,8 +47,8 @@ public final class BoardDao {
         if (resultSet.next()) {
             return Optional.of(new BoardVO(
                     resultSet.getLong("id"),
-                    resultSet.getString("current_turn"),
-                    resultSet.getString("winner")
+                    resultSet.getString("current_color"),
+                    resultSet.getString("winner_color")
             ));
         }
         return Optional.empty();

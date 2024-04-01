@@ -7,9 +7,9 @@ USE chess;
 
 CREATE TABLE IF NOT EXISTS board
 (
-    id           BIGINT     NOT NULL AUTO_INCREMENT,
-    current_turn VARCHAR(5) NOT NULL CHECK ( current_turn IN ('WHITE', 'BLACK')),
-    winner       VARCHAR(5) NOT NULL CHECK ( winner IN ('NONE', 'WHITE', 'BLACK')),
+    id            BIGINT     NOT NULL AUTO_INCREMENT,
+    current_color VARCHAR(5) NOT NULL CHECK ( current_color IN ('WHITE', 'BLACK')),
+    winner_color  VARCHAR(5) NOT NULL CHECK ( winner_color IN ('NONE', 'WHITE', 'BLACK')),
     PRIMARY KEY (id)
 );
 

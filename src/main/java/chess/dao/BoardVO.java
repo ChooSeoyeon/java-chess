@@ -6,7 +6,7 @@ import chess.model.piece.Piece;
 import chess.model.position.Position;
 import java.util.Map;
 
-public record BoardVO(Long id, String currentTurn, String winner) {
+public record BoardVO(Long id, String currentColor, String winnerColor) {
     public static BoardVO from(Board board) {
         return new BoardVO(
                 null,
@@ -18,7 +18,7 @@ public record BoardVO(Long id, String currentTurn, String winner) {
     public Board toBoard(Map<Position, Piece> squares) {
         return new Board(
                 squares,
-                Color.valueOf(currentTurn)
+                Color.valueOf(currentColor)
         );
     }
 }

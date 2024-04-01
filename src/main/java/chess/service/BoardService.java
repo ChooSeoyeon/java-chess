@@ -37,7 +37,7 @@ public class BoardService {
     }
 
     private boolean isRunningBoard(BoardVO boardVO) {
-        return boardVO.winner().equals(Color.NONE.name());
+        return boardVO.winnerColor().equals(Color.NONE.name());
     }
 
     private Board getExistedBoard(BoardVO boardVO) {
