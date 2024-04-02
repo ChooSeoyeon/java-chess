@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 public class InputView {
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final int TEAM_CODE_MIN_LENGTH = 2;
+    private static final int TEAM_CODE_MAX_LENGTH = 5;
     private static final int POSITION_LENGTH = 2;
     private static final int FILE_INDEX = 0;
     private static final int RANK_INDEX = 1;
@@ -12,6 +14,7 @@ public class InputView {
     private static final int RANK_START_ASCII = '1' - 1;
 
     public Command askStartCommand() {
+        System.out.print("> 명령어를 입력하세요: ");
         String input = SCANNER.next();
         Command command = Command.findBy(input);
         validateStartCommand(command);
@@ -24,7 +27,21 @@ public class InputView {
         }
     }
 
+    public String askTeamCode() {
+        System.out.print("> 팀 코드를 입력하세요: ");
+        String teamCode = SCANNER.next();
+        validateTeamCode(teamCode);
+        return teamCode;
+    }
+
+    private void validateTeamCode(String teamCode) {
+        if (teamCode.length() < TEAM_CODE_MIN_LENGTH || teamCode.length() > TEAM_CODE_MAX_LENGTH) {
+            throw new IllegalArgumentException("팀 코드는 2글자 이상 5글자 이하로 입력해야 합니다.");
+        }
+    }
+
     public Command askMoveOrStatusOrEndCommand() {
+        System.out.print("> 명령어를 입력하세요: ");
         String input = SCANNER.next();
         Command command = Command.findBy(input);
         validateMoveOrStatusOrEndCommand(command);

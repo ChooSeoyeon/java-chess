@@ -30,11 +30,12 @@ public class ChessGameController {
     }
 
     private void start() {
-        Board board = boardService.getRunningBoard();
+        String teamCode = retryOnException(inputView::askTeamCode);
+        Board board = boardService.getRunningBoard(teamCode);
         GameStatus gameStatus = new GameStatus();
         showBoard(board);
         while (gameStatus.isRunning()) {
-            retryOnException(() -> playTurn(gameStatus, board));
+            retryOnException(() -> playTurn(gameStatus, board, teamCode));
         }
     }
 
@@ -43,7 +44,7 @@ public class ChessGameController {
         outputView.printBoard(boardDTO);
     }
 
-    private void playTurn(GameStatus gameStatus, Board board) {
+    private void playTurn(GameStatus gameStatus, Board board, String teamCode) {
         Command command = inputView.askMoveOrStatusOrEndCommand();
         if (command == Command.END) {
             gameStatus.stop();
@@ -54,32 +55,32 @@ public class ChessGameController {
             return;
         }
         if (command == Command.MOVE) {
-            moveAndShowResult(board, gameStatus);
+            moveAndShowResult(board, gameStatus, teamCode);
             return;
         }
         throw new IllegalArgumentException("아직 제공하지 않는 기능입니다.");
     }
 
-    private void moveAndShowResult(Board board, GameStatus gameStatus) {
-        move(board);
+    private void moveAndShowResult(Board board, GameStatus gameStatus, String teamCode) {
+        move(board, teamCode);
         showBoard(board);
-        determineWinner(gameStatus, board);
+        determineWinner(gameStatus, board, teamCode);
     }
 
-    private void move(Board board) {
+    private void move(Board board, String teamCode) {
         PositionDTO sourcePositionDTO = inputView.askPosition();
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
         board.move(movement);
-        boardService.updatePieceAndTurn(board, movement);
+        boardService.updatePieceAndTurn(board, movement, teamCode);
     }
 
-    private void determineWinner(GameStatus gameStatus, Board board) {
+    private void determineWinner(GameStatus gameStatus, Board board, String teamCode) {
         Color winner = board.determineWinner();
         if (winner != Color.NONE) {
             gameStatus.stop();
             outputView.printWinner(winner);
-            boardService.updateWinner(winner);
+            boardService.updateWinner(winner, teamCode);
         }
     }
 

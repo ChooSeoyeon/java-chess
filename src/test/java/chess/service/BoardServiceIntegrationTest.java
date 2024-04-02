@@ -37,7 +37,7 @@ class BoardServiceIntegrationTest {
         connection.prepareStatement("DELETE FROM piece").execute();
         connection.prepareStatement("DELETE FROM board").execute();
         connection.prepareStatement(
-                        "INSERT INTO board (id, current_color, winner_color) VALUES (1, 'WHITE', 'NONE')")
+                        "INSERT INTO board (id, team_code, current_color, winner_color) VALUES (1, 'dora', 'WHITE', 'NONE')")
                 .execute();
         connection.prepareStatement(
                         "INSERT INTO piece (id, board_id, type, color, file, `rank`) VALUES (1, 1, 'KING', 'WHITE', 1, 1)")
@@ -48,9 +48,9 @@ class BoardServiceIntegrationTest {
     }
 
     @Test
-    void 마지막_보드를_조회해_우승자가_결정되지_않았다면_기존_보드를_사용한다() {
+    void 팀의_마지막_보드를_조회해_우승자가_결정되지_않았다면_기존_보드를_사용한다() {
         // when
-        Board board = boardService.getRunningBoard();
+        Board board = boardService.getRunningBoard("dora");
 
         // then
         List<String> boardLines = PieceFixture.mappingBoard(board);
@@ -67,12 +67,12 @@ class BoardServiceIntegrationTest {
     }
 
     @Test
-    void 마지막_보드를_조회해_우승자가_결정되었다면_새_보드를_생성한다() {
+    void 팀의_마지막_보드를_조회해_우승자가_결정되었다면_새_보드를_생성한다() {
         // given
-        boardService.updateWinner(Color.WHITE);
+        boardService.updateWinner(Color.WHITE, "dora");
 
         // when
-        Board board = boardService.getRunningBoard();
+        Board board = boardService.getRunningBoard("dora");
 
         // then
         List<String> boardLines = PieceFixture.mappingBoard(board);
@@ -89,16 +89,16 @@ class BoardServiceIntegrationTest {
     }
 
     @Test
-    void 기물이_움직일_수_있다면_기물의_위치와_턴을_업데이트한다() {
+    void 팀의_기물이_움직일_수_있다면_기물의_위치와_턴을_업데이트한다() {
         // given
-        Board board = boardService.getRunningBoard();
+        Board board = boardService.getRunningBoard("dora");
         Movement movement = new Movement(Position.of(1, 2), Position.of(1, 1));
 
         // when
-        boardService.updatePieceAndTurn(board, movement);
+        boardService.updatePieceAndTurn(board, movement, "dora");
 
         // then
-        Board updatedBoard = boardService.getRunningBoard();
+        Board updatedBoard = boardService.getRunningBoard("dora");
         List<String> boardLines = PieceFixture.mappingBoard(updatedBoard);
         assertThat(boardLines).containsExactly(
                 "........",

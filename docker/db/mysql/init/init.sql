@@ -8,9 +8,10 @@ USE chess;
 
 CREATE TABLE IF NOT EXISTS board
 (
-    id            BIGINT     NOT NULL AUTO_INCREMENT,
-    current_color VARCHAR(5) NOT NULL CHECK ( current_color IN ('WHITE', 'BLACK')),
-    winner_color  VARCHAR(5) NOT NULL CHECK ( winner_color IN ('NONE', 'WHITE', 'BLACK')),
+    id            BIGINT      NOT NULL AUTO_INCREMENT,
+    team_code     VARCHAR(20) NOT NULL,
+    current_color VARCHAR(5)  NOT NULL CHECK ( current_color IN ('WHITE', 'BLACK')),
+    winner_color  VARCHAR(5)  NOT NULL CHECK ( winner_color IN ('NONE', 'WHITE', 'BLACK')),
     PRIMARY KEY (id)
 );
 
@@ -30,9 +31,10 @@ USE `chess-test`;
 
 CREATE TABLE IF NOT EXISTS board
 (
-    id            BIGINT     NOT NULL AUTO_INCREMENT,
-    current_color VARCHAR(5) NOT NULL CHECK ( current_color IN ('WHITE', 'BLACK')),
-    winner_color  VARCHAR(5) NOT NULL CHECK ( winner_color IN ('NONE', 'WHITE', 'BLACK')),
+    id            BIGINT      NOT NULL AUTO_INCREMENT,
+    team_code     VARCHAR(20) NOT NULL,
+    current_color VARCHAR(5)  NOT NULL CHECK ( current_color IN ('WHITE', 'BLACK')),
+    winner_color  VARCHAR(5)  NOT NULL CHECK ( winner_color IN ('NONE', 'WHITE', 'BLACK')),
     PRIMARY KEY (id)
 );
 
