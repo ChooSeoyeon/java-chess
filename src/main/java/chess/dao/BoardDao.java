@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public final class BoardDao {
@@ -29,11 +31,16 @@ public final class BoardDao {
         }
     }
 
-    private Long fetchGeneratedKey(ResultSet generatedKeys) throws SQLException {
-        if (generatedKeys.next()) {
-            return generatedKeys.getLong(1);
+    public List<Long> findAllIdByTeamCode(String teamCode) {
+        String sql = "SELECT id FROM board WHERE team_code = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, teamCode);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return fetchBoardIds(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
         }
-        throw new SQLException("Generated key를 찾을 수 없습니다.");
     }
 
     public Optional<BoardVO> findLastByTeamCode(String teamCode) {
@@ -46,18 +53,6 @@ public final class BoardDao {
         } catch (SQLException e) {
             throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
         }
-    }
-
-    private Optional<BoardVO> fetchBoard(ResultSet resultSet) throws SQLException {
-        if (resultSet.next()) {
-            return Optional.of(new BoardVO(
-                    resultSet.getLong("id"),
-                    resultSet.getString("team_code"),
-                    resultSet.getString("current_color"),
-                    resultSet.getString("winner_color")
-            ));
-        }
-        return Optional.empty();
     }
 
     public void updateCurrentColor(Long id, String currentColor) {
@@ -80,5 +75,32 @@ public final class BoardDao {
         } catch (SQLException e) {
             throw new IllegalStateException("Board 업데이트 중 오류가 발생했습니다: " + e.getMessage());
         }
+    }
+
+    private Long fetchGeneratedKey(ResultSet generatedKeys) throws SQLException {
+        if (generatedKeys.next()) {
+            return generatedKeys.getLong(1);
+        }
+        throw new SQLException("Generated key를 찾을 수 없습니다.");
+    }
+
+    private List<Long> fetchBoardIds(ResultSet resultSet) throws SQLException {
+        List<Long> boardIds = new ArrayList<>();
+        while (resultSet.next()) {
+            boardIds.add(resultSet.getLong("id"));
+        }
+        return boardIds;
+    }
+
+    private Optional<BoardVO> fetchBoard(ResultSet resultSet) throws SQLException {
+        if (resultSet.next()) {
+            return Optional.of(new BoardVO(
+                    resultSet.getLong("id"),
+                    resultSet.getString("team_code"),
+                    resultSet.getString("current_color"),
+                    resultSet.getString("winner_color")
+            ));
+        }
+        return Optional.empty();
     }
 }
