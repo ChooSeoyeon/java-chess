@@ -27,6 +27,16 @@ docker-compose -p chess up -d # Docker 실행하기
     - 해당 teamCode로 이전에 게임을 진행하던 보드판이 있으면, 보드판을 생성하지 않고 이전 보드판에서 이어서 게임을 진행합니다. ✅
 2. 후에 해당 teamCode로 진행했던 게임들의 승패 결과와 최종 보드판을 볼 수 있습니다.
 
+> 만일 킹을 빠르게 죽여보고 싶다면, 아래대로 입력해보세요!
+> ```
+> move f2 f3
+> move e7 e5
+> move g2 g4
+> move d8 h4
+> move b2 b3
+> move h4 e1
+> ```
+
 # 규칙 설명
 
 - [대한체스연맹](http://www.kchess.or.kr/%EB%8C%80%EA%B5%AD%EB%B0%A9%EB%B2%95/)의 대국방법을 차용했습니다.
