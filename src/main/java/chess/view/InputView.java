@@ -13,17 +13,17 @@ public class InputView {
     private static final int FILE_START_ASCII = 'a' - 1;
     private static final int RANK_START_ASCII = '1' - 1;
 
-    public Command askStartCommand() {
+    public Command askStartOrRecordCommand() {
         System.out.print("> 명령어를 입력하세요: ");
         String input = SCANNER.next();
         Command command = Command.findBy(input);
-        validateStartCommand(command);
+        validateStartOrRecordCommand(command);
         return command;
     }
 
-    private void validateStartCommand(Command command) {
-        if (command != Command.START) {
-            throw new IllegalArgumentException("게임을 시작하려면 start를 입력해야 합니다.");
+    private void validateStartOrRecordCommand(Command command) {
+        if (command != Command.START && command != Command.RECORD) {
+            throw new IllegalArgumentException("게임을 시작하지 않은 상태에선 start를 혹은 record를 입력해야 합니다.");
         }
     }
 

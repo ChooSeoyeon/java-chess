@@ -27,6 +27,14 @@ public class BoardService {
         this.transactionManager = transactionManager;
     }
 
+    public List<Long> getBoardRecords(String teamCode) {
+        return transactionManager.performTransaction(() -> getBoardIdsWithTransaction(teamCode));
+    }
+
+    private List<Long> getBoardIdsWithTransaction(String teamCode) {
+        return boardDao.findAllIdByTeamCode(teamCode);
+    }
+
     public Board getRunningBoard(String teamCode) {
         return transactionManager.performTransaction(() -> getRunningBoardWithTransaction(teamCode));
     }

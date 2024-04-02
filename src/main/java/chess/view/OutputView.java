@@ -2,6 +2,7 @@ package chess.view;
 
 import chess.dto.BoardDTO;
 import chess.model.piece.Color;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,12 @@ public class OutputView {
         System.out.println("> 게임 이동 : move source위치 target위치 - 예. move b2 b3");
         System.out.println("> 게임 상태 : status");
         System.out.println("> ");
+    }
+
+    public void printBoardRecords(List<Long> boardIds) {
+        System.out.println("총 게임 수: " + boardIds.size());
+        System.out.println("진행한 게임 id 목록: ");
+        boardIds.forEach(System.out::println);
     }
 
     public void printBoard(BoardDTO boardDTO) {

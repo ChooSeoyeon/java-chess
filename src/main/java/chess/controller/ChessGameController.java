@@ -9,6 +9,7 @@ import chess.service.BoardService;
 import chess.view.Command;
 import chess.view.InputView;
 import chess.view.OutputView;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -25,17 +26,38 @@ public class ChessGameController {
 
     public void run() {
         outputView.printGameIntro();
-        retryOnException(inputView::askStartCommand);
-        start();
+        GameStatus gameStatus = GameStatus.createPreparingGameStatus();
+        while (gameStatus.isPreparing()) {
+            playTurnInPreparing(gameStatus);
+        }
     }
 
-    private void start() {
+    private void playTurnInPreparing(GameStatus gameStatus) {
+        Command command = retryOnException(inputView::askStartOrRecordCommand);
+        if (command == Command.RECORD) {
+            record();
+            return;
+        }
+        if (command == Command.START) {
+            gameStatus.running();
+            start(gameStatus);
+            return;
+        }
+        throw new IllegalArgumentException("아직 제공하지 않는 기능입니다.");
+    }
+
+    private void record() {
+        String teamCode = retryOnException(inputView::askTeamCode);
+        List<Long> boardIds = boardService.getBoardRecords(teamCode);
+        outputView.printBoardRecords(boardIds);
+    }
+
+    private void start(GameStatus gameStatus) {
         String teamCode = retryOnException(inputView::askTeamCode);
         Board board = boardService.getRunningBoard(teamCode);
-        GameStatus gameStatus = new GameStatus();
         showBoard(board);
         while (gameStatus.isRunning()) {
-            retryOnException(() -> playTurn(gameStatus, board, teamCode));
+            retryOnException(() -> playTurnInRunning(gameStatus, board, teamCode));
         }
     }
 
@@ -44,10 +66,10 @@ public class ChessGameController {
         outputView.printBoard(boardDTO);
     }
 
-    private void playTurn(GameStatus gameStatus, Board board, String teamCode) {
+    private void playTurnInRunning(GameStatus gameStatus, Board board, String teamCode) {
         Command command = inputView.askMoveOrStatusOrEndCommand();
         if (command == Command.END) {
-            gameStatus.stop();
+            gameStatus.ending();
             return;
         }
         if (command == Command.STATUS) {
@@ -78,7 +100,7 @@ public class ChessGameController {
     private void determineWinner(GameStatus gameStatus, Board board, String teamCode) {
         Color winner = board.determineWinner();
         if (winner != Color.NONE) {
-            gameStatus.stop();
+            gameStatus.ending();
             outputView.printWinner(winner);
             boardService.updateWinner(winner, teamCode);
         }
