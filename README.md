@@ -8,7 +8,7 @@
 
 ---
 
-# 체스 게임 실행 방법
+# 실행 방법
 
 1. docker-compose.yml 파일이 있는 경로에서 docker 명령어로 server를 실행합니다.
 
@@ -21,7 +21,13 @@ docker-compose -p chess up -d # Docker 실행하기
 
 ---
 
-# 체스 게임 설명
+# 서비스 설명
+
+1. teamCode로 보드판을 생성한 후, 하나의 기기에서 두 명이 번갈아가며 게임을 진행합니다.
+    - 해당 teamCode로 이전에 게임을 진행하던 보드판이 있으면, 보드판을 생성하지 않고 이전 보드판에서 이어서 게임을 진행합니다.
+2. 후에 해당 teamCode로 진행했던 게임들의 승패 결과와 최종 보드판을 볼 수 있습니다.
+
+# 규칙 설명
 
 - [대한체스연맹](http://www.kchess.or.kr/%EB%8C%80%EA%B5%AD%EB%B0%A9%EB%B2%95/)의 대국방법을 차용했습니다.
 
@@ -31,7 +37,7 @@ docker-compose -p chess up -d # Docker 실행하기
 - 백색 기물을 잡은 쪽이 항상 먼저 시작합니다. ✅
 - 상대편한테 킹을 잡히면 패배하고 게임이 종료됩니다. ✅
 
-## 행마법
+## 행마법 규칙
 
 - 비숍(Bishop)
     - 비숍은 대각선으로 원하는 만큼 움직입니다. ✅
@@ -114,10 +120,13 @@ docker-compose -p chess up -d # Docker 실행하기
 
 ### 데이터베이스 기능
 
-1. [게임 시작] 게임을 시작하면 보드를 `생성`한다 ✅
-    - 마지막 보드를 `조회`해 우승자가 결정되지 않았다면, 기존 보드를 사용한다 ✅
-2. [말 이동] 기물이 움직일 수 있다면 기물의 위치와 턴을 `업데이트`한다 ✅
-3. [게임 종료] 킹이 잡히면 보드의 우승자를 `업데이트`하고 게임을 종료한다 ✅
+1. [기록 관리] 게임 시작 전 사용자가 원한다면, teamCode를 입력받아 해당 팀의 이전 게임 기록들을 `조회`한다
+    - 먼저, 이전 게임들의 boardId 목록을 `조회`해 제공한다
+    - 이후, 사용자가 원하는 boardId의 상세 정보(승패 결과, 최종 보드판)를 `조회`해 제공한다
+2. [게임 시작] 게임을 시작하면 teamCode를 입력받아 해당 팀의 보드를 `생성`한다
+    - 해당 팀의 마지막 보드를 `조회`해 우승자가 결정되지 않았다면, 기존 보드를 사용한다
+3. [말 이동] 기물이 움직일 수 있다면 기물의 위치와 턴을 `업데이트`한다 ✅
+4. [게임 종료] 킹이 잡히면 보드의 우승자를 `업데이트`하고 게임을 종료한다 ✅
 
 ---
 
@@ -158,3 +167,82 @@ docker-compose -p chess up -d # Docker 실행하기
     - Piece: 기물들의 행마법 검증 -> `기물`
     - Movement: 두 위치 간 관계 관리 -> `위치`
         - Position: 위치 값
+
+## 가상의 체스 게임 앱
+
+- 보드판 생성 → POST `/boards`
+    - request
+
+        ```json
+        {
+          "teamCode": "DoraAndGamja"
+        }
+        ```
+
+    - response
+
+        ```json
+        {
+          "boardId": 4,
+          "pieces": [
+            ["BLACK_ROOK", "BLACK_KNIGHT", ... , "BLACK_ROOK"],
+            ["BLACK_PAWN", "BLACK_PAWN", ... , "BLACK_PAWN"],
+            ...
+            ["WHITE_ROOK", "WHITE_KNIGHT", ... , "WHITE_ROOK"]
+          ]
+        }
+        ```
+
+- 보드판의 말 이동 → PUT `/boards/{boardId}/movement`
+    - request
+
+        ```json
+        {
+          "sourcePosition": {
+            "file": 2,
+            "rank": 2
+          },
+          "destinationPosition": {
+            "file": 2,
+            "rank": 3
+          }
+        }
+        ```
+
+    - response
+
+        ```json
+        {
+          "pieces": [
+            ["BLACK_ROOK", "BLACK_KNIGHT", ... , "BLACK_ROOK"],
+            ["BLACK_PAWN", "BLACK_PAWN", ... , "BLACK_PAWN"],
+            ...
+            ["WHITE_ROOK", "WHITE_KNIGHT", ... , "WHITE_ROOK"]
+          ]
+        }
+        ```
+
+- 보드판 목록 조회 -> GET `/boards?teamCode=${teamCode}`
+    - response
+
+        ```json
+        {
+          "boardId": [1, 3, 4]
+        }
+        ```
+
+- 보드판 상세 조회 -> GET `/boards/{boardId}`
+    - response
+
+        ```json
+        {
+          "boardId": 1,
+          "winnerColor": "BLACK",
+          "pieces": [
+            ["BLACK_ROOK", "BLACK_KNIGHT", ... , "BLACK_ROOK"],
+            ["BLACK_PAWN", "BLACK_PAWN", ... , "BLACK_PAWN"],
+            ...
+            ["WHITE_ROOK", "WHITE_KNIGHT", ... , "WHITE_ROOK"]
+          ]
+        }
+        ```
