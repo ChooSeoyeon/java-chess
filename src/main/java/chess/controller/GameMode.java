@@ -1,6 +1,6 @@
 package chess.controller;
 
-public enum GameStatusCommand {
+public enum GameMode {
     PREPARING,
     RUNNING,
     ENDING;

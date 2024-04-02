@@ -1,29 +1,29 @@
 package chess.controller;
 
 public class GameStatus {
-    private GameStatusCommand command;
+    private GameMode mode;
 
-    private GameStatus(GameStatusCommand command) {
-        this.command = command;
+    private GameStatus(GameMode mode) {
+        this.mode = mode;
     }
 
     public static GameStatus createPreparingGameStatus() {
-        return new GameStatus(GameStatusCommand.PREPARING);
+        return new GameStatus(GameMode.PREPARING);
     }
 
     public boolean isPreparing() {
-        return command.isPreparing();
+        return mode.isPreparing();
     }
 
     public boolean isRunning() {
-        return command.isRunning();
+        return mode.isRunning();
     }
 
     public void running() {
-        command = GameStatusCommand.RUNNING;
+        mode = GameMode.RUNNING;
     }
 
     public void ending() {
-        command = GameStatusCommand.ENDING;
+        mode = GameMode.ENDING;
     }
 }
