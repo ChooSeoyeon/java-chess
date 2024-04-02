@@ -9,16 +9,17 @@ import java.util.stream.Collectors;
 public class OutputView {
     public void printGameIntro() {
         System.out.println("> 체스 게임을 시작합니다.");
+        System.out.println("> 기록 조회 : record");
         System.out.println("> 게임 시작 : start");
+        System.out.println("> 말 이동 : move source위치 target위치 - 예. move b2 b3");
+        System.out.println("> 상태 확인 : status");
         System.out.println("> 게임 종료 : end");
-        System.out.println("> 게임 이동 : move source위치 target위치 - 예. move b2 b3");
-        System.out.println("> 게임 상태 : status");
         System.out.println("> ");
     }
 
     public void printBoardRecords(List<Long> boardIds) {
-        System.out.println("총 게임 수: " + boardIds.size());
-        System.out.println("진행한 게임 id 목록: ");
+        System.out.println("완료한 게임 수: " + boardIds.size());
+        System.out.println("완료한 게임 id 목록: ");
         boardIds.forEach(System.out::println);
     }
 

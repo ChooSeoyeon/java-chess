@@ -28,11 +28,25 @@ public class BoardService {
     }
 
     public List<Long> getBoardRecords(String teamCode) {
-        return transactionManager.performTransaction(() -> getBoardIdsWithTransaction(teamCode));
+        return transactionManager.performTransaction(() -> getBoardRecordsWithTransaction(teamCode));
     }
 
-    private List<Long> getBoardIdsWithTransaction(String teamCode) {
-        return boardDao.findAllIdByTeamCode(teamCode);
+    private List<Long> getBoardRecordsWithTransaction(String teamCode) {
+        List<BoardVO> boardVOS = boardDao.findAllByTeamCode(teamCode);
+        return boardVOS.stream()
+                .filter(boardVO -> !isRunningBoard(boardVO))
+                .map(BoardVO::id)
+                .toList();
+    }
+
+    public Board getBoardRecord(Long boardId) {
+        return transactionManager.performTransaction(() -> getBoardRecordWithTransaction(boardId));
+    }
+
+    private Board getBoardRecordWithTransaction(Long boardId) {
+        BoardVO boardVO = boardDao.findById(boardId)
+                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+        return getExistedBoard(boardVO);
     }
 
     public Board getRunningBoard(String teamCode) {

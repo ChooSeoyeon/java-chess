@@ -28,7 +28,7 @@ public class ChessGameController {
         outputView.printGameIntro();
         GameStatus gameStatus = GameStatus.createPreparingGameStatus();
         while (gameStatus.isPreparing()) {
-            playTurnInPreparing(gameStatus);
+            retryOnException(() -> playTurnInPreparing(gameStatus));
         }
     }
 
@@ -50,6 +50,17 @@ public class ChessGameController {
         String teamCode = retryOnException(inputView::askTeamCode);
         List<Long> boardIds = boardService.getBoardRecords(teamCode);
         outputView.printBoardRecords(boardIds);
+        if (boardIds.isEmpty()) {
+            return;
+        }
+        Long boardId = retryOnException(() -> inputView.askBoardIdToShowDetail(boardIds));
+        Board board = boardService.getBoardRecord(boardId);
+        showBoardRecord(board);
+    }
+
+    private void showBoardRecord(Board board) {
+        showBoard(board);
+        outputView.printWinner(board.determineWinner());
     }
 
     private void start(GameStatus gameStatus) {

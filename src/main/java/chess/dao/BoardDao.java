@@ -31,12 +31,24 @@ public final class BoardDao {
         }
     }
 
-    public List<Long> findAllIdByTeamCode(String teamCode) {
-        String sql = "SELECT id FROM board WHERE team_code = ?";
+    public Optional<BoardVO> findById(Long boardId) {
+        String sql = "SELECT * FROM board WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, boardId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return fetchBoard(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    public List<BoardVO> findAllByTeamCode(String teamCode) {
+        String sql = "SELECT * FROM board WHERE team_code = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, teamCode);
             try (ResultSet resultSet = statement.executeQuery()) {
-                return fetchBoardIds(resultSet);
+                return fetchBoards(resultSet);
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
@@ -84,23 +96,27 @@ public final class BoardDao {
         throw new SQLException("Generated key를 찾을 수 없습니다.");
     }
 
-    private List<Long> fetchBoardIds(ResultSet resultSet) throws SQLException {
-        List<Long> boardIds = new ArrayList<>();
+    private List<BoardVO> fetchBoards(ResultSet resultSet) throws SQLException {
+        List<BoardVO> boards = new ArrayList<>();
         while (resultSet.next()) {
-            boardIds.add(resultSet.getLong("id"));
+            boards.add(mapToBoardVO(resultSet));
         }
-        return boardIds;
+        return boards;
     }
 
     private Optional<BoardVO> fetchBoard(ResultSet resultSet) throws SQLException {
         if (resultSet.next()) {
-            return Optional.of(new BoardVO(
-                    resultSet.getLong("id"),
-                    resultSet.getString("team_code"),
-                    resultSet.getString("current_color"),
-                    resultSet.getString("winner_color")
-            ));
+            return Optional.of(mapToBoardVO(resultSet));
         }
         return Optional.empty();
+    }
+
+    private BoardVO mapToBoardVO(ResultSet resultSet) throws SQLException {
+        return new BoardVO(
+                resultSet.getLong("id"),
+                resultSet.getString("team_code"),
+                resultSet.getString("current_color"),
+                resultSet.getString("winner_color")
+        );
     }
 }
