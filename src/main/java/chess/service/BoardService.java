@@ -89,7 +89,6 @@ public class BoardService {
     }
 
     private void updatePieceAndTurnWithTransaction(Board board, Movement movement, String teamCode) {
-        board.move(movement);
         BoardVO boardVO = boardDao.findLastByTeamCode(teamCode)
                 .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
         Long boardId = boardVO.id();

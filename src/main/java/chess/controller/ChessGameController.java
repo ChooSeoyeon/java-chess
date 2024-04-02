@@ -104,6 +104,7 @@ public class ChessGameController {
         PositionDTO sourcePositionDTO = inputView.askPosition();
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
+        board.move(movement);
         boardService.updatePieceAndTurn(board, movement, teamCode);
     }
 

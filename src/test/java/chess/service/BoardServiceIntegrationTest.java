@@ -1,7 +1,6 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
@@ -111,16 +110,5 @@ class BoardServiceIntegrationTest {
                 "k.......",
                 "........"
         );
-    }
-
-    @Test
-    void 팀의_기물이_움직일_수_없다면_예외를_발생시킨다() {
-        // given
-        Board board = boardService.getRunningBoard("dora");
-        Movement movement = new Movement(Position.of(1, 1), Position.of(1, 3));
-
-        // when & then
-        assertThatThrownBy(() -> boardService.updatePieceAndTurn(board, movement, "dora"))
-                .isInstanceOf(IllegalStateException.class);
     }
 }
