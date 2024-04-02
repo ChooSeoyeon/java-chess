@@ -21,7 +21,7 @@ public final class BoardDao {
             statement.setString(2, board.currentColor());
             statement.setString(3, board.winnerColor());
             statement.executeUpdate();
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) { // TODO: piece도 메모리 누수 방지 위해 ResultSet 닫아주기
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 return fetchGeneratedKey(generatedKeys);
             }
         } catch (SQLException e) {

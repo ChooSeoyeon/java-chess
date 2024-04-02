@@ -33,8 +33,9 @@ public class PieceDao {
         String sql = "SELECT * FROM piece WHERE board_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, boardId);
-            ResultSet resultSet = statement.executeQuery();
-            return fetchPieces(resultSet);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return fetchPieces(resultSet);
+            }
         } catch (SQLException e) {
             throw new IllegalStateException("Piece 조회 중 오류가 발생했습니다.");
         }
@@ -46,8 +47,9 @@ public class PieceDao {
             statement.setLong(1, boardId);
             statement.setInt(2, file);
             statement.setInt(3, rank);
-            ResultSet resultSet = statement.executeQuery();
-            return fetchPiece(resultSet);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return fetchPiece(resultSet);
+            }
         } catch (SQLException e) {
             throw new IllegalStateException("Piece 조회 중 오류가 발생했습니다.");
         }
