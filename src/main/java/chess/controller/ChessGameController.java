@@ -94,6 +94,11 @@ public class ChessGameController {
         throw new IllegalArgumentException("아직 제공하지 않는 기능입니다.");
     }
 
+    private void showBoardStatus(Board board) {
+        Map<Color, Double> boardStatus = board.calculateScore();
+        outputView.printBoardStatus(boardStatus);
+    }
+
     private void moveAndShowResult(Board board, GameStatus gameStatus, String teamCode) {
         move(board, teamCode);
         showBoard(board);
@@ -115,11 +120,6 @@ public class ChessGameController {
             outputView.printWinner(winner);
             boardService.updateWinner(winner, teamCode);
         }
-    }
-
-    private void showBoardStatus(Board board) {
-        Map<Color, Double> boardStatus = board.calculateScore();
-        outputView.printBoardStatus(boardStatus);
     }
 
     private void retryOnException(Runnable action) {
