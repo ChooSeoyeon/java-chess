@@ -9,11 +9,12 @@ import chess.service.BoardService;
 import chess.view.InputView;
 import chess.view.OutputView;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Application {
     private static final String PROPERTIES_PATH = "src/main/java/chess/resource/production.yml";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         DatabaseConnectionManager databaseConnectionManager = DatabaseConnectionManager.from(PROPERTIES_PATH);
         Connection connection = databaseConnectionManager.getConnection();
 
@@ -27,5 +28,7 @@ public class Application {
 
         ChessGameController chessGameController = new ChessGameController(outputView, inputView, boardService);
         chessGameController.run();
+
+        connection.close();
     }
 }
