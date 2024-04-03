@@ -48,13 +48,13 @@ public class ChessGameController {
 
     private void record() {
         String teamCode = retryOnException(inputView::askTeamCode);
-        List<Long> boardIds = boardService.getBoardRecords(teamCode);
+        List<Long> boardIds = boardService.getBoardRecordsWithTransaction(teamCode);
         outputView.printBoardRecords(boardIds);
         if (boardIds.isEmpty()) {
             return;
         }
         Long boardId = retryOnException(() -> inputView.askBoardIdToShowDetail(boardIds));
-        Board board = boardService.getBoardRecord(boardId);
+        Board board = boardService.getBoardRecordWithTransaction(boardId);
         showBoardRecord(board);
     }
 
@@ -65,7 +65,7 @@ public class ChessGameController {
 
     private void start(GameStatus gameStatus) {
         String teamCode = retryOnException(inputView::askTeamCode);
-        Board board = boardService.getRunningBoard(teamCode);
+        Board board = boardService.getRunningBoardWithTransaction(teamCode);
         showBoard(board);
         while (gameStatus.isRunning()) {
             retryOnException(() -> playTurnInRunning(gameStatus, board, teamCode));
@@ -110,7 +110,7 @@ public class ChessGameController {
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
         board.move(movement);
-        boardService.updatePieceAndTurn(board, movement, teamCode);
+        boardService.updatePieceAndTurnWithTransaction(board, movement, teamCode);
     }
 
     private void determineWinner(GameStatus gameStatus, Board board, String teamCode) {
@@ -118,7 +118,7 @@ public class ChessGameController {
         if (winner != Color.NONE) {
             gameStatus.ending();
             outputView.printWinner(winner);
-            boardService.updateWinner(winner, teamCode);
+            boardService.updateWinnerWithTransaction(winner, teamCode);
         }
     }
 

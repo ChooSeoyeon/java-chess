@@ -50,7 +50,7 @@ class BoardServiceIntegrationTest {
     @Test
     void 팀의_마지막_보드를_조회해_우승자가_결정되지_않았다면_기존_보드를_사용한다() {
         // when
-        Board board = boardService.getRunningBoard("dora");
+        Board board = boardService.getRunningBoardWithTransaction("dora");
 
         // then
         List<String> boardLines = PieceFixture.mappingBoard(board);
@@ -69,10 +69,10 @@ class BoardServiceIntegrationTest {
     @Test
     void 팀의_마지막_보드를_조회해_우승자가_결정되었다면_새_보드를_생성한다() {
         // given
-        boardService.updateWinner(Color.WHITE, "dora");
+        boardService.updateWinnerWithTransaction(Color.WHITE, "dora");
 
         // when
-        Board board = boardService.getRunningBoard("dora");
+        Board board = boardService.getRunningBoardWithTransaction("dora");
 
         // then
         List<String> boardLines = PieceFixture.mappingBoard(board);
@@ -91,14 +91,14 @@ class BoardServiceIntegrationTest {
     @Test
     void 팀의_기물이_움직일_수_있다면_기물의_위치와_턴을_업데이트한다() {
         // given
-        Board board = boardService.getRunningBoard("dora");
+        Board board = boardService.getRunningBoardWithTransaction("dora");
         Movement movement = new Movement(Position.of(1, 1), Position.of(1, 2));
 
         // when
-        boardService.updatePieceAndTurn(board, movement, "dora");
+        boardService.updatePieceAndTurnWithTransaction(board, movement, "dora");
 
         // then
-        Board updatedBoard = boardService.getRunningBoard("dora");
+        Board updatedBoard = boardService.getRunningBoardWithTransaction("dora");
         List<String> boardLines = PieceFixture.mappingBoard(updatedBoard);
         assertThat(boardLines).containsExactly(
                 "........",

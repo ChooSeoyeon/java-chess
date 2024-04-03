@@ -27,11 +27,11 @@ public class BoardService {
         this.transactionManager = transactionManager;
     }
 
-    public List<Long> getBoardRecords(String teamCode) {
-        return transactionManager.performTransaction(() -> getBoardRecordsWithTransaction(teamCode));
+    public List<Long> getBoardRecordsWithTransaction(String teamCode) {
+        return transactionManager.performTransaction(() -> getBoardRecords(teamCode));
     }
 
-    private List<Long> getBoardRecordsWithTransaction(String teamCode) {
+    private List<Long> getBoardRecords(String teamCode) {
         List<BoardVO> boardVOS = boardDao.findAllByTeamCode(teamCode);
         return boardVOS.stream()
                 .filter(boardVO -> !isRunningBoard(boardVO))
@@ -39,21 +39,21 @@ public class BoardService {
                 .toList();
     }
 
-    public Board getBoardRecord(Long boardId) {
-        return transactionManager.performTransaction(() -> getBoardRecordWithTransaction(boardId));
+    public Board getBoardRecordWithTransaction(Long boardId) {
+        return transactionManager.performTransaction(() -> getBoardRecord(boardId));
     }
 
-    private Board getBoardRecordWithTransaction(Long boardId) {
+    private Board getBoardRecord(Long boardId) {
         BoardVO boardVO = boardDao.findById(boardId)
                 .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
         return getExistedBoard(boardVO);
     }
 
-    public Board getRunningBoard(String teamCode) {
-        return transactionManager.performTransaction(() -> getRunningBoardWithTransaction(teamCode));
+    public Board getRunningBoardWithTransaction(String teamCode) {
+        return transactionManager.performTransaction(() -> getRunningBoard(teamCode));
     }
 
-    private Board getRunningBoardWithTransaction(String teamCode) {
+    private Board getRunningBoard(String teamCode) {
         return boardDao.findLastByTeamCode(teamCode)
                 .filter(this::isRunningBoard)
                 .map(this::getExistedBoard)
@@ -84,11 +84,11 @@ public class BoardService {
         return board;
     }
 
-    public void updatePieceAndTurn(Board board, Movement movement, String teamCode) {
-        transactionManager.performTransaction(() -> updatePieceAndTurnWithTransaction(board, movement, teamCode));
+    public void updatePieceAndTurnWithTransaction(Board board, Movement movement, String teamCode) {
+        transactionManager.performTransaction(() -> updatePieceAndTurn(board, movement, teamCode));
     }
 
-    private void updatePieceAndTurnWithTransaction(Board board, Movement movement, String teamCode) {
+    private void updatePieceAndTurn(Board board, Movement movement, String teamCode) {
         BoardVO boardVO = boardDao.findLastByTeamCode(teamCode)
                 .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
         Long boardId = boardVO.id();
@@ -106,11 +106,11 @@ public class BoardService {
         boardDao.updateCurrentColor(boardId, board.getCurrentColor().name());
     }
 
-    public void updateWinner(Color winnerColor, String teamCode) {
-        transactionManager.performTransaction(() -> updateWinnerWithTransaction(winnerColor, teamCode));
+    public void updateWinnerWithTransaction(Color winnerColor, String teamCode) {
+        transactionManager.performTransaction(() -> updateWinner(winnerColor, teamCode));
     }
 
-    private void updateWinnerWithTransaction(Color winnerColor, String teamCode) {
+    private void updateWinner(Color winnerColor, String teamCode) {
         BoardVO boardVO = boardDao.findLastByTeamCode(teamCode)
                 .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
         boardDao.updateWinnerColor(boardVO.id(), winnerColor.name());
