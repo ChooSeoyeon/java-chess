@@ -44,8 +44,7 @@ public class BoardService {
     }
 
     private Board getBoardRecord(Long boardId) {
-        BoardVO boardVO = boardDao.findById(boardId)
-                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+        BoardVO boardVO = getBoardById(boardId);
         return getExistedBoard(boardVO);
     }
 
@@ -89,21 +88,16 @@ public class BoardService {
     }
 
     private void updatePieceAndTurn(Board board, Movement movement, String teamCode) {
-        BoardVO boardVO = boardDao.findLastByTeamCode(teamCode)
-                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
-        Long boardId = boardVO.id();
-
+        BoardVO boardVO = getBoardByTeamCode(teamCode);
         Position source = movement.getSource();
         Position destination = movement.getDestination();
-        PieceVO sourcePieceVO = pieceDao.findByBoardIdAndFileAndRank(boardId, source.getFile(), source.getRank())
-                .orElseThrow(() -> new IllegalStateException("출발지 말을 찾을 수 없습니다."));
-        PieceVO destinationPieceVO = pieceDao.findByBoardIdAndFileAndRank(boardId, destination.getFile(),
-                        destination.getRank())
-                .orElseThrow(() -> new IllegalStateException("도착지 말을 찾을 수 없습니다."));
+
+        PieceVO sourcePieceVO = getPiece(boardVO, source);
+        PieceVO destinationPieceVO = getPiece(boardVO, destination);
 
         pieceDao.updateTypeAndColor(destinationPieceVO.id(), sourcePieceVO.type(), sourcePieceVO.color());
         pieceDao.updateTypeAndColor(sourcePieceVO.id(), Type.NONE.name(), Color.NONE.name());
-        boardDao.updateCurrentColor(boardId, board.getCurrentColor().name());
+        boardDao.updateCurrentColor(boardVO.id(), board.getCurrentColor().name());
     }
 
     public void updateWinnerWithTransaction(Color winnerColor, String teamCode) {
@@ -111,8 +105,22 @@ public class BoardService {
     }
 
     private void updateWinner(Color winnerColor, String teamCode) {
-        BoardVO boardVO = boardDao.findLastByTeamCode(teamCode)
-                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+        BoardVO boardVO = getBoardByTeamCode(teamCode);
         boardDao.updateWinnerColor(boardVO.id(), winnerColor.name());
+    }
+
+    private BoardVO getBoardById(Long boardId) {
+        return boardDao.findById(boardId)
+                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+    }
+
+    private BoardVO getBoardByTeamCode(String teamCode) {
+        return boardDao.findLastByTeamCode(teamCode)
+                .orElseThrow(() -> new IllegalStateException("게임을 찾을 수 없습니다."));
+    }
+
+    private PieceVO getPiece(BoardVO boardVO, Position position) {
+        return pieceDao.findByBoardIdAndFileAndRank(boardVO.id(), position.getFile(), position.getRank())
+                .orElseThrow(() -> new IllegalStateException("말을 찾을 수 없습니다."));
     }
 }
