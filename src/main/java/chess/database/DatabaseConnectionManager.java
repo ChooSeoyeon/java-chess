@@ -1,6 +1,7 @@
 package chess.database;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,8 +22,8 @@ public abstract class DatabaseConnectionManager {
             Properties properties = new Properties();
             properties.load(fileInputStream);
             return properties;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("properties 파일을 읽는데 실패했습니다.");
+        } catch (IOException e) {
+            throw new DatabaseConnectionException("Properties 파일을 불러오는데 실패했습니다.", e);
         }
     }
 
@@ -36,7 +37,7 @@ public abstract class DatabaseConnectionManager {
             String jdbcUrl = "jdbc:mysql://" + server + "/" + database + option;
             return DriverManager.getConnection(jdbcUrl, username, password);
         } catch (SQLException e) {
-            throw new IllegalStateException("DB 연결을 실패했습니다.");
+            throw new DatabaseConnectionException("데이터베이스 연결에 실패했습니다.", e);
         }
     }
 }

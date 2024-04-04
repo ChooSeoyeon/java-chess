@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.database.DatabaseConnectionException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public final class BoardDao {
                 return fetchGeneratedKey(generatedKeys);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Board를 생성하는데 실패했습니다.", e);
         }
     }
 
@@ -39,7 +40,7 @@ public final class BoardDao {
                 return fetchBoard(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Board를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -51,7 +52,7 @@ public final class BoardDao {
                 return fetchBoards(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Team code로 Board를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -63,7 +64,7 @@ public final class BoardDao {
                 return fetchBoard(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Team code로 마지막 Board를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -74,7 +75,7 @@ public final class BoardDao {
             statement.setLong(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Board의 Current color를 업데이트하는데 실패했습니다.", e);
         }
     }
 
@@ -85,7 +86,7 @@ public final class BoardDao {
             statement.setLong(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Board의 Winner color를 업데이트하는데 실패했습니다.", e);
         }
     }
 
