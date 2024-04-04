@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.database.DatabaseAccessException;
+import chess.database.DataAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,7 +26,7 @@ public class PieceDao {
             statement.setInt(5, piece.rank());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Piece를 생성하는데 실패했습니다.", e);
+            throw new DataAccessException("Piece를 생성하는데 실패했습니다.", e);
         }
     }
 
@@ -38,7 +38,7 @@ public class PieceDao {
                 return fetchPieces(resultSet);
             }
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Board ID로 Piece를 찾는데 실패했습니다.", e);
+            throw new DataAccessException("Board ID로 Piece를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -52,7 +52,7 @@ public class PieceDao {
                 return fetchPiece(resultSet);
             }
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Board ID, File, Rank로 Piece를 찾는데 실패했습니다.", e);
+            throw new DataAccessException("Board ID, File, Rank로 Piece를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -64,7 +64,7 @@ public class PieceDao {
             statement.setLong(3, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Piece의 Type과 Color를 업데이트하는데 실패했습니다.", e);
+            throw new DataAccessException("Piece의 Type과 Color를 업데이트하는데 실패했습니다.", e);
         }
     }
 

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.database.DatabaseAccessException;
+import chess.database.DataAccessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +28,7 @@ public final class BoardDao {
                 return fetchGeneratedKey(generatedKeys);
             }
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Board를 생성하는데 실패했습니다.", e);
+            throw new DataAccessException("Board를 생성하는데 실패했습니다.", e);
         }
     }
 
@@ -40,7 +40,7 @@ public final class BoardDao {
                 return fetchBoard(resultSet);
             }
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Board를 찾는데 실패했습니다.", e);
+            throw new DataAccessException("Board를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -52,7 +52,7 @@ public final class BoardDao {
                 return fetchBoards(resultSet);
             }
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Team code로 Board를 찾는데 실패했습니다.", e);
+            throw new DataAccessException("Team code로 Board를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -64,7 +64,7 @@ public final class BoardDao {
                 return fetchBoard(resultSet);
             }
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Team code로 마지막 Board를 찾는데 실패했습니다.", e);
+            throw new DataAccessException("Team code로 마지막 Board를 찾는데 실패했습니다.", e);
         }
     }
 
@@ -75,7 +75,7 @@ public final class BoardDao {
             statement.setLong(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Board의 Current color를 업데이트하는데 실패했습니다.", e);
+            throw new DataAccessException("Board의 Current color를 업데이트하는데 실패했습니다.", e);
         }
     }
 
@@ -86,7 +86,7 @@ public final class BoardDao {
             statement.setLong(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseAccessException("Board의 Winner color를 업데이트하는데 실패했습니다.", e);
+            throw new DataAccessException("Board의 Winner color를 업데이트하는데 실패했습니다.", e);
         }
     }
 
