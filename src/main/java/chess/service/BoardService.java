@@ -34,9 +34,13 @@ public class BoardService {
     private List<Long> getBoardRecords(String teamCode) {
         List<BoardVO> boardVOS = boardDao.findAllByTeamCode(teamCode);
         return boardVOS.stream()
-                .filter(boardVO -> !isRunningBoard(boardVO))
+                .filter(this::isFinishedBoard)
                 .map(BoardVO::id)
                 .toList();
+    }
+
+    private boolean isFinishedBoard(BoardVO boardVO) {
+        return !isRunningBoard(boardVO);
     }
 
     public Board getBoardRecordWithTransaction(Long boardId) {
