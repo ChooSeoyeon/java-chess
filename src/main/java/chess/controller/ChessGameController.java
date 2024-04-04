@@ -109,16 +109,14 @@ public class ChessGameController {
         PositionDTO sourcePositionDTO = inputView.askPosition();
         PositionDTO targetPositionDTO = inputView.askPosition();
         Movement movement = new Movement(sourcePositionDTO.toEntity(), targetPositionDTO.toEntity());
-        board.move(movement);
-        boardService.updatePieceAndTurnWithTransaction(board, movement, teamCode);
+        boardService.movePiecesWithTransaction(board, movement, teamCode);
     }
 
     private void determineWinner(GameStatus gameStatus, Board board, String teamCode) {
-        Color winner = board.determineWinner();
+        Color winner = boardService.determineWinnerWithTransaction(board, teamCode);
         if (winner != Color.NONE) {
             gameStatus.ending();
             outputView.printWinner(winner);
-            boardService.updateWinnerWithTransaction(winner, teamCode);
         }
     }
 

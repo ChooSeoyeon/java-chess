@@ -87,11 +87,13 @@ public class BoardService {
         return board;
     }
 
-    public void updatePieceAndTurnWithTransaction(Board board, Movement movement, String teamCode) {
-        transactionManager.performTransaction(() -> updatePieceAndTurn(board, movement, teamCode));
+    public void movePiecesWithTransaction(Board board, Movement movement, String teamCode) {
+        transactionManager.performTransaction(() -> movePieces(board, movement, teamCode));
     }
 
-    private void updatePieceAndTurn(Board board, Movement movement, String teamCode) {
+    private void movePieces(Board board, Movement movement, String teamCode) {
+        board.move(movement);
+
         BoardVO boardVO = getBoardByTeamCode(teamCode);
         Position source = movement.getSource();
         Position destination = movement.getDestination();
@@ -104,11 +106,23 @@ public class BoardService {
         boardDao.updateCurrentColor(boardVO.id(), board.getCurrentColor().name());
     }
 
-    public void updateWinnerWithTransaction(Color winnerColor, String teamCode) {
-        transactionManager.performTransaction(() -> updateWinner(winnerColor, teamCode));
+    public Color determineWinnerWithTransaction(Board board, String teamCode) {
+        return transactionManager.performTransaction(() -> determineWinner(board, teamCode));
     }
 
-    private void updateWinner(Color winnerColor, String teamCode) {
+    private Color determineWinner(Board board, String teamCode) {
+        Color winnerColor = board.determineWinner();
+        if (isDeterminedWinner(winnerColor)) {
+            updateWinnerColor(teamCode, winnerColor);
+        }
+        return winnerColor;
+    }
+
+    private boolean isDeterminedWinner(Color color) {
+        return !color.equals(Color.NONE);
+    }
+
+    private void updateWinnerColor(String teamCode, Color winnerColor) {
         BoardVO boardVO = getBoardByTeamCode(teamCode);
         boardDao.updateWinnerColor(boardVO.id(), winnerColor.name());
     }

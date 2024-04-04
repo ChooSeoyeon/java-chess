@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
@@ -68,13 +69,16 @@ class BoardServiceIntegrationTest {
     @Test
     void 팀의_마지막_보드를_조회해_우승자가_결정되었다면_새_보드를_생성한다() {
         // given
-        boardService.updateWinnerWithTransaction(Color.WHITE, "dora");
+        Board board = boardService.getRunningBoardWithTransaction("dora");
+        boardService.movePiecesWithTransaction(
+                board, new Movement(Position.of(1, 1), Position.of(1, 2)), "dora");
+        boardService.determineWinnerWithTransaction(board, "dora");
 
         // when
-        Board board = boardService.getRunningBoardWithTransaction("dora");
+        Board updatedBoard = boardService.getRunningBoardWithTransaction("dora");
 
         // then
-        List<String> boardLines = PieceFixture.mappingBoard(board);
+        List<String> boardLines = PieceFixture.mappingBoard(updatedBoard);
         assertThat(boardLines).containsExactly(
                 "RNBQKBNR",
                 "PPPPPPPP",
@@ -94,7 +98,7 @@ class BoardServiceIntegrationTest {
         Movement movement = new Movement(Position.of(1, 1), Position.of(1, 2));
 
         // when
-        boardService.updatePieceAndTurnWithTransaction(board, movement, "dora");
+        boardService.movePiecesWithTransaction(board, movement, "dora");
 
         // then
         Board updatedBoard = boardService.getRunningBoardWithTransaction("dora");
@@ -109,5 +113,44 @@ class BoardServiceIntegrationTest {
                 "k.......",
                 "........"
         );
+    }
+
+    @Test
+    void 팀의_기물이_움직일_수_없다면_예외가_발생한다() {
+        // given
+        Board board = boardService.getRunningBoardWithTransaction("dora");
+        Movement movement = new Movement(Position.of(1, 1), Position.of(1, 3));
+
+        // when, then
+        assertThatThrownBy(() -> boardService.movePiecesWithTransaction(board, movement, "dora"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 우승자가_결정되었다면_우승자를_업데이트한다() {
+        // given
+        Board board = boardService.getRunningBoardWithTransaction("dora");
+        boardService.movePiecesWithTransaction(
+                board, new Movement(Position.of(1, 1), Position.of(1, 2)), "dora");
+
+        // when
+        boardService.determineWinnerWithTransaction(board, "dora");
+
+        // then
+        Board updatedBoard = boardService.getBoardRecordWithTransaction(1L);
+        assertThat(updatedBoard.determineWinner()).isEqualTo(Color.WHITE);
+    }
+
+    @Test
+    void 우승자가_결정되지_않았다면_우승자가_업데이트_되지_않고_게임이_끝나지_않는다() {
+        // given
+        Board board = boardService.getRunningBoardWithTransaction("dora");
+
+        // when
+        boardService.determineWinnerWithTransaction(board, "dora");
+
+        // then
+        Board updatedBoard = boardService.getRunningBoardWithTransaction("dora");
+        assertThat(updatedBoard.determineWinner()).isEqualTo(Color.NONE);
     }
 }
