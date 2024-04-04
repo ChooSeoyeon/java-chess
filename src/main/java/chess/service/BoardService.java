@@ -112,13 +112,13 @@ public class BoardService {
 
     private Color determineWinner(Board board, String teamCode) {
         Color winnerColor = board.determineWinner();
-        if (isDeterminedWinner(winnerColor)) {
+        if (isWinnerDetermined(winnerColor)) {
             updateWinnerColor(teamCode, winnerColor);
         }
         return winnerColor;
     }
 
-    private boolean isDeterminedWinner(Color color) {
+    public boolean isWinnerDetermined(Color color) {
         return !color.equals(Color.NONE);
     }
 

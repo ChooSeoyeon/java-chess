@@ -114,7 +114,7 @@ public class ChessGameController {
 
     private void determineAndShowWinner(GameStatus gameStatus, Board board, String teamCode) {
         Color winner = boardService.determineWinnerWithTransaction(board, teamCode);
-        if (winner != Color.NONE) {
+        if (boardService.isWinnerDetermined(winner)) {
             gameStatus.ending();
             outputView.printWinner(winner);
         }
