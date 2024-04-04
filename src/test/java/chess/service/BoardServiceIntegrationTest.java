@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
 import chess.database.DatabaseConnectionManager;
+import chess.database.TestDatabaseConnectionManager;
 import chess.database.TransactionManager;
 import chess.model.board.Board;
 import chess.model.piece.Color;
@@ -18,13 +19,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class BoardServiceIntegrationTest {
-    private static final String TEST_PROPERTIES_PATH = "src/main/java/chess/resource/test.yml";
-
     BoardService boardService;
 
     @BeforeEach
     void setUp() throws Exception {
-        DatabaseConnectionManager databaseConnectionManager = DatabaseConnectionManager.from(TEST_PROPERTIES_PATH);
+        DatabaseConnectionManager databaseConnectionManager = new TestDatabaseConnectionManager();
         Connection connection = databaseConnectionManager.getConnection();
         initializeDatabase(connection);
         BoardDao boardDao = new BoardDao(connection);

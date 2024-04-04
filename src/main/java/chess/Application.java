@@ -4,6 +4,7 @@ import chess.controller.ChessGameController;
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
 import chess.database.DatabaseConnectionManager;
+import chess.database.ProductionDatabaseConnectionManager;
 import chess.database.TransactionManager;
 import chess.service.BoardService;
 import chess.view.InputView;
@@ -12,10 +13,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Application {
-    private static final String PROPERTIES_PATH = "src/main/java/chess/resource/production.yml";
-
     public static void main(String[] args) throws SQLException {
-        DatabaseConnectionManager databaseConnectionManager = DatabaseConnectionManager.from(PROPERTIES_PATH);
+        DatabaseConnectionManager databaseConnectionManager = new ProductionDatabaseConnectionManager();
         Connection connection = databaseConnectionManager.getConnection();
 
         BoardDao boardDao = new BoardDao(connection);

@@ -6,16 +6,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DatabaseConnectionManager {
-    private final Properties properties;
+public abstract class DatabaseConnectionManager {
+    protected final Properties properties;
 
-    private DatabaseConnectionManager(Properties properties) {
-        this.properties = properties;
+    public DatabaseConnectionManager() {
+        this.properties = loadProperties(getPropertiesPath());
     }
 
-    public static DatabaseConnectionManager from(String propertiesPath) {
-        return new DatabaseConnectionManager(loadProperties(propertiesPath));
-    }
+    protected abstract String getPropertiesPath();
 
     private static Properties loadProperties(String configurationFileName) {
         try {
