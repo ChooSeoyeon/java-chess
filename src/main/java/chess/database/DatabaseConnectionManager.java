@@ -23,7 +23,7 @@ public abstract class DatabaseConnectionManager {
             properties.load(fileInputStream);
             return properties;
         } catch (IOException e) {
-            throw new DatabaseConnectionException("Properties 파일을 불러오는데 실패했습니다.", e);
+            throw new DatabaseAccessException("Properties 파일을 불러오는데 실패했습니다.", e);
         }
     }
 
@@ -37,7 +37,7 @@ public abstract class DatabaseConnectionManager {
             String jdbcUrl = "jdbc:mysql://" + server + "/" + database + option;
             return DriverManager.getConnection(jdbcUrl, username, password);
         } catch (SQLException e) {
-            throw new DatabaseConnectionException("데이터베이스 연결에 실패했습니다.", e);
+            throw new DatabaseAccessException("데이터베이스 연결에 실패했습니다.", e);
         }
     }
 }

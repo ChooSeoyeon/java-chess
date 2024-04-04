@@ -37,7 +37,7 @@ public class TransactionManager {
         try {
             connection.setAutoCommit(false);
         } catch (Exception e) {
-            throw new DatabaseConnectionException("트랜잭션 시작에 실패했습니다.", e);
+            throw new DatabaseAccessException("트랜잭션 시작에 실패했습니다.", e);
         }
     }
 
@@ -45,7 +45,7 @@ public class TransactionManager {
         try {
             connection.commit();
         } catch (Exception e) {
-            throw new DatabaseConnectionException("트랜잭션 커밋에 실패했습니다.", e);
+            throw new DatabaseAccessException("트랜잭션 커밋에 실패했습니다.", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class TransactionManager {
         try {
             connection.rollback();
         } catch (Exception e) {
-            throw new DatabaseConnectionException("트랜잭션 롤백에 실패했습니다.", e);
+            throw new DatabaseAccessException("트랜잭션 롤백에 실패했습니다.", e);
         }
     }
 }
