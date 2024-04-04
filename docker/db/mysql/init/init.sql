@@ -49,3 +49,7 @@ CREATE TABLE IF NOT EXISTS piece
     PRIMARY KEY (id),
     FOREIGN KEY (board_id) REFERENCES board (id)
 );
+
+GRANT ALL PRIVILEGES ON `chess`.* TO 'user'@'%';
+GRANT ALL PRIVILEGES ON `chess-test`.* TO 'user'@'%';
+FLUSH PRIVILEGES;
