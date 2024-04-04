@@ -102,7 +102,7 @@ public class ChessGameController {
     private void moveAndShowResult(Board board, GameStatus gameStatus, String teamCode) {
         move(board, teamCode);
         showBoard(board);
-        determineWinner(gameStatus, board, teamCode);
+        determineAndShowWinner(gameStatus, board, teamCode);
     }
 
     private void move(Board board, String teamCode) {
@@ -112,7 +112,7 @@ public class ChessGameController {
         boardService.movePiecesWithTransaction(board, movement, teamCode);
     }
 
-    private void determineWinner(GameStatus gameStatus, Board board, String teamCode) {
+    private void determineAndShowWinner(GameStatus gameStatus, Board board, String teamCode) {
         Color winner = boardService.determineWinnerWithTransaction(board, teamCode);
         if (winner != Color.NONE) {
             gameStatus.ending();
