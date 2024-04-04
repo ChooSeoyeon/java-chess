@@ -27,7 +27,7 @@ public final class BoardDao {
                 return fetchGeneratedKey(generatedKeys);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Board 생성 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -39,7 +39,7 @@ public final class BoardDao {
                 return fetchBoard(resultSet);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,7 +51,7 @@ public final class BoardDao {
                 return fetchBoards(resultSet);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -63,7 +63,7 @@ public final class BoardDao {
                 return fetchBoard(resultSet);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Board 조회 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -74,7 +74,7 @@ public final class BoardDao {
             statement.setLong(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Board 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -85,7 +85,7 @@ public final class BoardDao {
             statement.setLong(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Board 업데이트 중 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

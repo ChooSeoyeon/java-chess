@@ -25,7 +25,7 @@ public class PieceDao {
             statement.setInt(5, piece.rank());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Piece 생성 중 오류가 발생했습니다.");
+            throw new RuntimeException(e);
         }
     }
 
@@ -37,7 +37,7 @@ public class PieceDao {
                 return fetchPieces(resultSet);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Piece 조회 중 오류가 발생했습니다.");
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,7 +51,7 @@ public class PieceDao {
                 return fetchPiece(resultSet);
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Piece 조회 중 오류가 발생했습니다.");
+            throw new RuntimeException(e);
         }
     }
 
@@ -63,7 +63,7 @@ public class PieceDao {
             statement.setLong(3, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new IllegalStateException("Piece 업데이트 중 오류가 발생했습니다.");
+            throw new RuntimeException(e);
         }
     }
 

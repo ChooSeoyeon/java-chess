@@ -17,7 +17,7 @@ public class TransactionManager {
             commit();
         } catch (Exception e) {
             rollback();
-            throw new IllegalStateException(e.getMessage());
+            throw e;
         }
     }
 
@@ -29,7 +29,7 @@ public class TransactionManager {
             return result;
         } catch (Exception e) {
             rollback();
-            throw new IllegalStateException(e.getMessage());
+            throw e;
         }
     }
 
